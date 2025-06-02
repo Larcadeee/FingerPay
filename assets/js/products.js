@@ -1,3 +1,74 @@
+import supabase from "../../config/supabase.js";
+
+// Fetch all products
+async function getProducts() {
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("name");
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching products:", error.message);
+    return [];
+  }
+}
+
+// Add a new product (admin only)
+async function addProduct(product) {
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .insert([product])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error adding product:", error.message);
+    throw error;
+  }
+}
+
+// Update a product (admin only)
+async function updateProduct(productId, updates) {
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .update(updates)
+      .eq("product_id", productId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error updating product:", error.message);
+    throw error;
+  }
+}
+
+// Delete a product (admin only)
+async function deleteProduct(productId) {
+  try {
+    const { error } = await supabase
+      .from("products")
+      .delete()
+      .eq("product_id", productId);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Error deleting product:", error.message);
+    throw error;
+  }
+}
+
+export { getProducts, addProduct, updateProduct, deleteProduct };
+
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize product carousel
   if (document.getElementById("productCarousel")) {

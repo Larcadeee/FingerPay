@@ -1,66 +1,78 @@
+// Create Supabase client
+const supabaseUrl = "https://yzwkdfrbotpcvtnnncns.supabase.co";
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6d2tkZnJib3RwY3Z0bm5uY25zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwMDAxMjcsImV4cCI6MjA2MTU3NjEyN30.d1sADufPth97GQeYOSfjkn2340XIYhPb5_oyz50Ppbg";
+
+const supabaseClient = window.supabase.createClient(
+  supabaseUrl,
+  supabaseAnonKey
+);
+
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
 
   if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
+    loginForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
       // Get form data
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      // Validate form
-      if (!validateEmail(email)) {
-        showNotification("Please enter a valid email address.", "warning");
-        return;
+      try {
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
+        submitBtn.disabled = true;
+
+        // Sign in with Supabase
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+
+        if (error) throw error;
+
+        // If login successful
+        showNotification("Login successful!", "success");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1000);
+      } catch (error) {
+        showNotification(error.message, "error");
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
       }
-
-      if (!password) {
-        showNotification("Please enter your password.", "warning");
-        return;
-      }
-
-      // Simulate API call for authentication
-      showNotification("Authenticating...", "info");
-
-      // Simulate API delay
-      setTimeout(() => {
-        // For demo purposes, use hardcoded credentials
-        if (email === "admin@fingerpay.com" && password === "admin123") {
-          showNotification("Login successful!", "success");
-
-          // Redirect to dashboard after successful login
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 1000);
-        } else {
-          showNotification("Invalid email or password.", "danger");
-        }
-      }, 1500);
     });
   }
 
   // Handle forgot password
   const forgotPasswordLink = document.querySelector('a[href="#"]');
   if (forgotPasswordLink) {
-    forgotPasswordLink.addEventListener("click", function (e) {
+    forgotPasswordLink.addEventListener("click", async function (e) {
       e.preventDefault();
       const email = document.getElementById("email").value;
 
       if (!validateEmail(email)) {
-        showNotification("Please enter your email address first.", "warning");
+        showNotification("Please enter a valid email address.", "warning");
         return;
       }
 
-      // Simulate sending reset password email
-      showNotification("Sending password reset instructions...", "info");
-
-      setTimeout(() => {
+      try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(
+          email
+        );
+        if (error) throw error;
         showNotification(
           "Password reset instructions sent to your email!",
           "success"
         );
-      }, 1500);
+      } catch (error) {
+        showNotification(error.message, "error");
+      }
     });
   }
 
@@ -72,22 +84,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Show notification function
   function showNotification(message, type = "info") {
-    // Create notification element
     const notification = document.createElement("div");
     notification.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
     notification.role = "alert";
     notification.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-
-    // Add to document
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
     document.body.appendChild(notification);
-
-    // Remove after 3 seconds
-    setTimeout(() => {
-      notification.remove();
-    }, 3000);
+    setTimeout(() => notification.remove(), 3000);
   }
 
   // Add input event listeners for real-time validation
