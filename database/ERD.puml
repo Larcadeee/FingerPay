@@ -1,0 +1,66 @@
+@startuml FingerPay_ERD
+
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+!define foreign_key(x) #x#
+
+' Entities
+table(Users) {
+  primary_key(user_id)
+  email
+  password_hash
+  full_name
+  phone_number
+  role
+  fingerprint_data
+  created_at
+  updated_at
+}
+
+table(Products) {
+  primary_key(product_id)
+  name
+  description
+  price
+  image_url
+  category
+  created_at
+  updated_at
+}
+
+table(Transactions) {
+  primary_key(transaction_id)
+  foreign_key(user_id)
+  total_amount
+  status
+  payment_method
+  fingerprint_verified
+  created_at
+}
+
+table(Transaction_Items) {
+  primary_key(item_id)
+  foreign_key(transaction_id)
+  foreign_key(product_id)
+  quantity
+  unit_price
+  subtotal
+  created_at
+}
+
+table(System_Logs) {
+  primary_key(log_id)
+  foreign_key(user_id)
+  action
+  message
+  status
+  created_at
+}
+
+' Relationships
+Users "1" -- "0..*" Transactions
+Users "1" -- "0..*" System_Logs
+Transactions "1" -- "1..*" Transaction_Items
+Products "1" -- "0..*" Transaction_Items
+
+@enduml 

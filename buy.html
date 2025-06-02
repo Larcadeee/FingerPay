@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FingerPay - Buy</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <div
+        class="sidebar bg-dark text-white"
+        style="width: 250px; min-height: 100vh"
+      >
+        <div class="p-3">
+          <h4 class="text-center mb-4">
+            <i class="fas fa-fingerprint me-2"></i>
+            FingerPay
+          </h4>
+          <div class="nav flex-column">
+            <a href="dashboard.html" class="nav-link text-white">
+              <i class="fas fa-chart-line me-2"></i> Dashboard
+            </a>
+            <a href="products.html" class="nav-link text-white">
+              <i class="fas fa-box me-2"></i> Products
+            </a>
+            <a href="buyers.html" class="nav-link text-white">
+              <i class="fas fa-users me-2"></i> Buyers
+            </a>
+            <a href="buy.html" class="nav-link active text-white">
+              <i class="fas fa-shopping-cart me-2"></i> Buy
+            </a>
+            <a href="datalogs.html" class="nav-link text-white">
+              <i class="fas fa-clipboard-list me-2"></i> Datalogs
+            </a>
+            <a href="#" class="nav-link text-white" id="logoutBtn">
+              <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-grow-1 p-4">
+        <div class="container-fluid">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Buy Products</h2>
+            <div class="d-flex align-items-center">
+              <button
+                class="btn btn-outline-primary me-3"
+                id="viewCartBtn"
+                data-bs-toggle="modal"
+                data-bs-target="#cartModal"
+              >
+                <i class="fas fa-shopping-cart me-2"></i>View Cart
+                <span class="badge bg-primary" id="cartCount">0</span>
+              </button>
+              <button
+                class="btn"
+                id="proceedToBuyBtn"
+                style="
+                  background-color: #7fb69f;
+                  color: white;
+                  display: none;
+                  border-radius: 8px;
+                  padding: 8px 24px;
+                  font-size: 16px;
+                  border: none;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <i class="fas fa-check me-2"></i>Buy
+              </button>
+            </div>
+          </div>
+
+          <!-- Product Selection -->
+          <div class="card mb-4">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4"
+              >
+                <h5 class="card-title">Our Coffee Menu</h5>
+                <div class="input-group" style="width: 300px">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search drinks..."
+                  />
+                  <button class="btn btn-outline-secondary">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Matcha -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/matcha.jpg"
+                      class="card-img-top"
+                      alt="Matcha"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Matcha</h5>
+                      <p class="card-text fw-bold text-primary">₱120</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('matcha')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('matcha')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Iced Latte -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/iced-latte.jpg"
+                      class="card-img-top"
+                      alt="Iced Latte"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Iced Latte</h5>
+                      <p class="card-text fw-bold text-primary">₱125</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('iced-latte')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('iced-latte')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Frappe -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/frappe.jpg"
+                      class="card-img-top"
+                      alt="Frappe"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Frappe</h5>
+                      <p class="card-text fw-bold text-primary">₱135</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('frappe')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('frappe')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Coffee Jelly -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/coffee-jelly.jpg"
+                      class="card-img-top"
+                      alt="Coffee Jelly"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Coffee Jelly</h5>
+                      <p class="card-text fw-bold text-primary">₱125</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('coffee-jelly')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('coffee-jelly')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Shade -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/shade.jpg"
+                      class="card-img-top"
+                      alt="Shade"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Shade</h5>
+                      <p class="card-text fw-bold text-primary">₱130</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('shade')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('shade')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Caramel -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/caramel.jpg"
+                      class="card-img-top"
+                      alt="Caramel"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Caramel</h5>
+                      <p class="card-text fw-bold text-primary">₱125</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('caramel')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('caramel')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pumpkin Coffee -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/pumpkin-coffee.jpg"
+                      class="card-img-top"
+                      alt="Pumpkin Coffee"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Pumpkin Coffee</h5>
+                      <p class="card-text fw-bold text-primary">₱135</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('pumpkin-coffee')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('pumpkin-coffee')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Choco Coffee -->
+                <div class="col-md-3 mb-4">
+                  <div class="card h-100">
+                    <img
+                      src="assets/img/choco-coffee.jpg"
+                      class="card-img-top"
+                      alt="Choco Coffee"
+                      style="height: 200px; object-fit: cover"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title">Choco Coffee</h5>
+                      <p class="card-text fw-bold text-primary">₱140</p>
+                      <div class="d-flex">
+                        <button
+                          class="btn btn-outline-secondary flex-grow-1 me-2"
+                          onclick="viewDetails('choco-coffee')"
+                        >
+                          View
+                        </button>
+                        <button
+                          class="btn btn-success flex-grow-1"
+                          onclick="addToCart('choco-coffee')"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Side Panel -->
+    <div
+      class="offcanvas offcanvas-end"
+      tabindex="-1"
+      id="cartModal"
+      style="width: 400px"
+    >
+      <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" style="color: #2f5851">Order</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column p-0">
+        <div class="cart-items flex-grow-1">
+          <div id="cartItems">
+            <!-- Cart items will be dynamically added here -->
+          </div>
+        </div>
+
+        <div class="cart-footer p-3 border-top mt-auto">
+          <div class="mb-3">
+            <h6 class="mb-2">Total:</h6>
+            <h5 style="color: #2f5851" id="cartTotal">₱0</h5>
+          </div>
+          <div id="cartButtons">
+            <button
+              class="btn w-100 mb-2"
+              style="background-color: #2f5851; color: white"
+              onclick="proceedToBuy()"
+            >
+              Buy
+            </button>
+            <button
+              class="btn w-100"
+              style="
+                border: 1px solid #2f5851;
+                background: white;
+                color: #2f5851;
+              "
+              data-bs-dismiss="offcanvas"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .cart-items {
+        overflow-y: auto;
+        max-height: calc(100vh - 200px);
+      }
+
+      #proceedToBuyBtn {
+        transition: all 0.2s ease;
+      }
+
+      #proceedToBuyBtn:hover {
+        background-color: #6ea58e !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      #proceedToBuyBtn:active {
+        transform: translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .cart-item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        margin-right: 1rem;
+        border-radius: 4px;
+      }
+
+      .cart-item-details {
+        flex-grow: 1;
+      }
+
+      .cart-item-title {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+        color: #2f5851;
+      }
+
+      .cart-item-price {
+        font-size: 0.9rem;
+        color: #2f5851;
+        margin-bottom: 0.5rem;
+      }
+
+      .cart-item-quantity {
+        display: flex;
+        align-items: center;
+      }
+
+      .quantity-btn {
+        width: 28px;
+        height: 28px;
+        border: 1px solid #2f5851;
+        background: white;
+        color: #2f5851;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.2rem;
+        border-radius: 4px;
+      }
+
+      .quantity-input {
+        width: 40px;
+        height: 28px;
+        text-align: center;
+        border: none;
+        background: transparent;
+        margin: 0 0.5rem;
+      }
+
+      .cart-item-total {
+        font-size: 1rem;
+        color: #2f5851;
+        margin-left: auto;
+        padding-left: 1rem;
+      }
+
+      .offcanvas-body {
+        padding: 0 !important;
+      }
+    </style>
+
+    <!-- Fingerprint Verification Modal -->
+    <div class="modal fade" id="fingerprintModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Verify Purchase</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="mb-4">
+              <i class="fas fa-fingerprint fa-5x text-primary"></i>
+            </div>
+            <p>Place your finger on the scanner to complete the purchase</p>
+            <div class="progress mb-3">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                style="width: 0%"
+              ></div>
+            </div>
+            <p class="text-muted">Status: Waiting for fingerprint...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">Transaction Successful!</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="mb-4">
+              <i class="fas fa-check-circle fa-5x text-success"></i>
+            </div>
+            <h4>Thank you for your purchase!</h4>
+            <p>Transaction ID: #12345</p>
+            <div class="transaction-details mt-4">
+              <h5>Transaction Details</h5>
+              <p><strong>Date:</strong> <span id="transactionDate"></span></p>
+              <p>
+                <strong>Total Amount:</strong>
+                <span id="transactionAmount"></span>
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              onclick="printReceipt()"
+            >
+              Print Receipt
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img
+              id="productModalImage"
+              class="img-fluid mb-3 w-100"
+              style="height: 300px; object-fit: cover"
+              alt="Product"
+            />
+            <h4 class="text-primary mb-2" id="productModalPrice"></h4>
+            <p class="text-muted" id="productModalDescription"></p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              onclick="addToCart(this.getAttribute('data-product-id'))"
+              data-bs-dismiss="modal"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/buy.js"></script>
+  </body>
+</html>
