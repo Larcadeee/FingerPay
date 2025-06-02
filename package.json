@@ -1,6 +1,13 @@
 {
   "type": "module",
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.8"
+    "@supabase/supabase-js": "^2.49.8",
+    "express": "^4.18.3",
+    "usb": "^2.12.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }

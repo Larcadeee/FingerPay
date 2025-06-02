@@ -3,10 +3,7 @@ const supabaseUrl = "https://yzwkdfrbotpcvtnnncns.supabase.co";
 const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6d2tkZnJib3RwY3Z0bm5uY25zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYwMDAxMjcsImV4cCI6MjA2MTU3NjEyN30.d1sADufPth97GQeYOSfjkn2340XIYhPb5_oyz50Ppbg";
 
-const supabaseClient = window.supabase.createClient(
-  supabaseUrl,
-  supabaseAnonKey
-);
+const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
@@ -27,20 +24,45 @@ document.addEventListener("DOMContentLoaded", function () {
           '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
         submitBtn.disabled = true;
 
-        // Sign in with Supabase
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password,
+        // First, check if the user exists in our users table
+        const { data: userData, error: userError } = await supabase
+          .from("users")
+          .select("user_id, email, role")
+          .eq("email", email)
+          .limit(1)
+          .maybeSingle();
+
+        if (userError) {
+          throw new Error("Error checking user account");
+        }
+
+        if (!userData) {
+          throw new Error("Account not found");
+        }
+
+        // Sign in with Supabase Auth
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
         });
 
         if (error) throw error;
 
-        // If login successful
+        // Update the user's metadata with their role
+        const { error: updateError } = await supabase.auth.updateUser({
+          data: { role: userData.role },
+        });
+
+        if (updateError) {
+          console.error("Error updating user metadata:", updateError);
+        }
+
         showNotification("Login successful!", "success");
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 1000);
       } catch (error) {
+        console.error("Login error:", error);
         showNotification(error.message, "error");
         // Reset button state
         submitBtn.innerHTML = originalText;
@@ -62,9 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       try {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(
-          email
-        );
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
         if (error) throw error;
         showNotification(
           "Password reset instructions sent to your email!",
@@ -92,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     `;
     document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
+    setTimeout(() => notification.remove(), 5000);
   }
 
   // Add input event listeners for real-time validation
